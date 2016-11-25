@@ -42,8 +42,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ai.cs" />
     <Compile Include="Models\Grid.cs" />
     <Compile Include="Models\Node.cs" />
+    <Compile Include="Models\Sequence.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

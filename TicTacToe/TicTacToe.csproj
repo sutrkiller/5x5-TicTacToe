@@ -45,9 +45,7 @@
   <ItemGroup>
     <Compile Include="Ai.cs" />
     <Compile Include="Models\Grid.cs" />
-    <Compile Include="Models\GridNew.cs" />
     <Compile Include="Models\Node.cs" />
-    <Compile Include="Models\RatingResult.cs" />
     <Compile Include="Models\Sequence.cs" />
     <Compile Include="Models\SequenceType.cs" />
     <Compile Include="Program.cs" />

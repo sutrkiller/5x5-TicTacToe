@@ -17,27 +17,18 @@ namespace TicTacToe
             var size = Convert.ToInt32(Console.ReadLine());
             var computerTurn = Console.ReadLine().ToUpper() == "X";
 
-            //            for (;;)
-            //            {
             bool computer = false;
             bool draw = false;
-
-
             var grid = new Grid(size, computerTurn);
-            var ai = new Ai();
-
-            var ai2 = new Ai();
             var grid2 = new Grid(size, !computerTurn);
+
             for (;;)
             {
                 if (computerTurn)
                 {
-                    //var move = NextMoveD(grid);
-                    //var move = ai.NextMove(grid);
                     var move = NextMoveNew2(grid);
                     if (move == null)
                     {
-                        //computer = true;
                         draw = true;
                         break;
                     }
@@ -47,16 +38,13 @@ namespace TicTacToe
                 }
                 else
                 {
-                    //var split = Console.ReadLine().Split(' ').Select(x=>Convert.ToInt32(x)).ToArray();
-                    //if (split[0]<0 || split[1] <0) return;
-                    //grid.Add(split[0],split[1]);
+                    //var split = Console.ReadLine().Split(' ').Select(x => Convert.ToInt32(x)).ToArray();
+                    //if (split[0] < 0 || split[1] < 0) return;
+                    //grid.Add(split[0], split[1]);
 
-                    //                    var move = NextMoveD(grid2);
-                    //var move = ai2.NextMove(grid2);
                     var move = NextMoveNew2(grid2);
                     if (move == null)
                     {
-
                         draw = true;
                         break;
                     }
@@ -72,12 +60,10 @@ namespace TicTacToe
                 {
                     var s = seqs.Find(x => x.Length >= 5);
                     computer = s.Number == Grid.Computer;
-                    draw = false;
                     break;
                 }
 
                 computerTurn = !computerTurn;
-                //Console.ReadLine();
             }
 
             if (draw)
@@ -88,41 +74,6 @@ namespace TicTacToe
             {
                 Debug.WriteLine(computer ? "Computer wins!" : "Player wins.");
             }
-
-            //                if (!string.IsNullOrWhiteSpace(Console.ReadLine()))
-            //                {
-            //                    break;
-            //                }
-            //            }
-
-            Console.ReadLine();
-        }
-
-
-        private static Node NextMoveD(Grid grid)
-        {
-
-            var all = grid.GetPossibleMoves();
-            //Console.WriteLine("Before: "+grid.Rate(null));
-            var listTmp = (from node in all select grid.Clone().Add(node.X, node.Y).Rate(node)).ToList();
-
-            if (!listTmp.Any()) return null;
-
-            var betterCat = listTmp.Where(x => x.CCategory / 100 > x.PCategory / 100).ToList();
-            if (betterCat.Any())
-                return betterCat.OrderByDescending(x => x.CValue).ThenBy(x=>x.PValue).Select(x => new Node {X = x.X, Y = x.Y}).First();
-
-            return
-                listTmp.OrderBy(x => x.PCategory/100)
-                    .ThenBy(x=>x.PValue)
-                    .ThenByDescending(x=>x.CValue)
-                    .Select(x => new Node {X = x.X, Y = x.Y})
-                    .FirstOrDefault();
-
-            var list = listTmp.Select((x, i) => new { Index = i, Value = x }).OrderByDescending(x => x.Value.CCategory).ThenByDescending(x => x.Value.CValue - x.Value.PValue).ToList();
-            var first = list.FirstOrDefault();
-            //Console.WriteLine("After: " + first?.Value);
-            return first == null ? null : all[first.Index];
         }
 
         private static Random _rand = new Random();
@@ -151,7 +102,7 @@ namespace TicTacToe
             var allC = all.Where(x => x.AroundFreeCells.Any() && x.Number == Grid.Computer).ToList();
             var allP = all.Where(x => x.AroundFreeCells.Any() && x.Number == Grid.Player).ToList();
 
-            Console.WriteLine(++deb);
+            //Console.WriteLine(++deb);
 
             //Computer can win (has 4)
             var five = allC.FirstOrDefault(x => x.Length == 4);
@@ -160,7 +111,7 @@ namespace TicTacToe
                 return new Node {X = five.AroundFreeCells.First().Item1, Y = five.AroundFreeCells.First().Item2};
             }
 
-            Console.WriteLine(++deb);
+            //Console.WriteLine(++deb);
             //Computer has more sequences of the same type of lenght >= 4
             var withGap =
                 allC.SelectMany(
@@ -171,7 +122,7 @@ namespace TicTacToe
                 return new Node {X = withGap.Key.Item1, Y = withGap.Key.Item2};
             }
 
-            Console.WriteLine(++deb);
+            //Console.WriteLine(++deb);
             //Blocking player's 4
             var four = allP.FirstOrDefault(x => x.Length == 4);
             if (four != null)
@@ -197,7 +148,7 @@ namespace TicTacToe
                 }
             }
 
-            Console.WriteLine(++deb);
+            //Console.WriteLine(++deb);
             //Player has more sequences of the same type of lenght >= 4
             var withGapP =
                 allP.SelectMany(
@@ -208,7 +159,7 @@ namespace TicTacToe
                 return new Node { X = withGapP.Key.Item1, Y = withGapP.Key.Item2 };
             }
 
-            Console.WriteLine(++deb);
+            //Console.WriteLine(++deb);
             //Computer has 2+2f && 1+2f in same dir
             var two2One2 = moves.Select((x, i)=>
                         allC.Where(
@@ -222,7 +173,7 @@ namespace TicTacToe
                 return new Node {X = moves[two2One2.First().Key.Index].X, Y = moves[two2One2.First().Key.Index].Y};
             }
 
-            Console.WriteLine(++deb);
+            //Console.WriteLine(++deb);
             //Player has 2+2f && 1+2f in same dir
             var two2One2P = moves.Select((x, i) =>
                         allP.Where(
@@ -237,7 +188,7 @@ namespace TicTacToe
             }
 
 
-            Console.WriteLine(++deb);
+            //Console.WriteLine(++deb);
             //Computer has 3 +2f
             var three2 = allC.FirstOrDefault(x => x.Length == 3 && x.AroundFreeCells.Count == 2);
             if (three2 != null)
@@ -245,7 +196,7 @@ namespace TicTacToe
                 return new Node { X = three2.AroundFreeCells[0].Item1, Y = three2.AroundFreeCells[0].Item2 };
             }
 
-            Console.WriteLine(++deb);
+            //Console.WriteLine(++deb);
             //Computer has 3+1 && 2+2
             var three21 = moves.Select(
                 (x,i) => new { Items =
@@ -258,7 +209,7 @@ namespace TicTacToe
                 return new Node {X = moves[three21.Index].X, Y = moves[three21.Index].Y};
             }
 
-            Console.WriteLine(++deb);
+            //Console.WriteLine(++deb);
             //Player has 3+2 -- find better spot
             var three2P =
                 allP.Where(x => x.Length == 3 && x.AroundFreeCells.Count == 2)
@@ -273,7 +224,7 @@ namespace TicTacToe
                 return new Node {X = three2P.Item1, Y = three2P.Item2};
             }
 
-            Console.WriteLine(++deb);
+            //Console.WriteLine(++deb);
             //Player has 3+1 && 2+2
             var three21P = moves.Select(
                 (x, i) => new {
@@ -289,7 +240,7 @@ namespace TicTacToe
                 return new Node { X = moves[three21P.Index].X, Y = moves[three21P.Index].Y };
             }
 
-            Console.WriteLine(++deb);
+            //Console.WriteLine(++deb);
             //Computer has 2* 2+2
             var two22 =
                 moves.Select(
@@ -311,7 +262,7 @@ namespace TicTacToe
                 return new Node{X=moves[two22.Index].X, Y = moves[two22.Index].Y};
             }
 
-            Console.WriteLine(++deb);
+            //Console.WriteLine(++deb);
             //Computer has 3+1...
             var three1 = allC.FirstOrDefault(x => x.Length == 3 && x.AroundFreeCells.Count == 1);
             if (three1 != null)
@@ -319,7 +270,7 @@ namespace TicTacToe
                 return new Node {X = three1.AroundFreeCells[0].Item1, Y = three1.AroundFreeCells[0].Item2};
             }
 
-            Console.WriteLine(++deb);
+            //Console.WriteLine(++deb);
             //Player has 3+1
             var three1P = allP.FirstOrDefault(x => x.Length == 3 && x.AroundFreeCells.Count == 1);
             if (three1P != null)
@@ -327,7 +278,7 @@ namespace TicTacToe
                 return new Node { X = three1P.AroundFreeCells[0].Item1, Y = three1P.AroundFreeCells[0].Item2 };
             }
 
-            Console.WriteLine(++deb);
+            //Console.WriteLine(++deb);
             //Computer has 2+2
             var two2 =
                 allC.Where(x => x.Length == 2 && x.AroundFreeCells.Count == 2)
@@ -339,7 +290,7 @@ namespace TicTacToe
                     x => grid.FreeCellsInDirection(x.Item1, x.Item2, two2.Type).Count()).Select(x=>new Node{X= x.Item1, Y=x.Item2}).First();
             }
 
-            Console.WriteLine(++deb);
+            //Console.WriteLine(++deb);
             //TODO: finish later
             //Rest
             return all.Where(x=>x.AroundFreeCells.Count > 0).OrderByDescending(x => x.Length * 2 + x.AroundFreeCells.Count).Select(x=>new Node{X=x.AroundFreeCells[0].Item1,Y=x.AroundFreeCells[0].Item2}).FirstOrDefault();

@@ -29,26 +29,6 @@ namespace TicTacToe
             var best = node.Children.FirstOrDefault(x => x.Value == max);
             Debug.Assert(best != null);
             return best;
-
-            //            var possibleMoves = grid.GetPossibleMoves();
-            //            if (possibleMoves.Count == 0) return null;
-            //            foreach (var move in possibleMoves)
-            //            {
-            //                move.IsMaxNode = false;
-            //                NextMove(grid, move, depth);
-            //            }
-
-            //            Debug.WriteLine("Cutted: " +_cutted);
-            //            Debug.WriteLine("Counted: "+_counted);
-            //            Debug.WriteLine("Counted/Cutted: "+_counted/(double)_cutted);
-            ////            var max = possibleMoves.Max(x => x.Value);
-            ////            return possibleMoves.FirstOrDefault(x => x.Value == max);
-
-            //            //var ch = possibleMoves.SelectMany(x => x.Children).SelectMany(x => x.Children).SelectMany(x => x.Children).SelectMany(x=>x.Children).ToList();
-            //            var max = possibleMoves.Max(x => x.Value);
-            //            var min = possibleMoves.Min(x => x.Value);
-            //            var all = possibleMoves.Where(x => x.Value == max).ToList();
-            //            return possibleMoves.Aggregate((a, b) => a.Value >= b.Value ? a : b);
         }
 
         private Node NextMove(Grid grid, Node node, int depth = DefaultDepth, bool first = false)
@@ -58,7 +38,7 @@ namespace TicTacToe
             if (depth == 0)
             {
                 ++_counted;
-         //       node.Value = grid.Rate(node.X, node.Y, grid.FindAllSequences());
+                //node.Value = grid.Rate(node.X, node.Y, grid.FindAllSequences());
                 return node;
             }
 
@@ -110,89 +90,6 @@ namespace TicTacToe
                 }
                 return node;
             }
-        }
-
-        private Node NextMoveN(Grid grid, Node node, int depth = DefaultDepth, bool first = false)
-        {
-            if (node == null) return null;
-
-            var gridClone = grid.Clone();
-            if (!first) gridClone.Add(node.X, node.Y);
-            var nextMoves = gridClone.GetPossibleMoves();
-
-            if (depth == 0 || !nextMoves.Any())
-            {
-                ++_counted;
-                node.ValueN = grid.Rate(node);
-                return node;
-            }
-
-            if (node.IsMaxNode)
-            {
-                node.ValueN = null;
-                foreach (var nextMove in nextMoves)
-                {
-                    node.Children.Add(nextMove);
-
-                    nextMove.MaxN = node.MaxN;
-                    nextMove.MinN = node.MinN;
-                    nextMove.IsMaxNode = false;
-                    node.ValueN = Max(node.ValueN, NextMoveN(gridClone, nextMove, depth - 1).ValueN);
-                    node.MinN = Max(node.MinN, node.ValueN);
-                    if (node.MinN != null && node.MaxN != null && Max(node.MinN, node.MaxN) ==node.MinN)
-                    {
-                        ++_cutted;
-                        break;
-                    }
-                }
-                return node;
-            }
-            else
-            {
-                node.ValueN = null;
-
-                foreach (var nextMove in nextMoves)
-                {
-                    node.Children.Add(nextMove);
-
-                    nextMove.MaxN = node.MaxN;
-                    nextMove.MinN = node.MinN;
-                    nextMove.IsMaxNode = true;
-                    var value = NextMoveN(gridClone, nextMove, depth - 1).ValueN;
-                    node.ValueN = Min(value, node.ValueN);
-                    node.MaxN = Min(node.MaxN, node.ValueN);
-                    if (node.MinN != null && node.MaxN != null && Min(node.MaxN,node.MinN)==node.MaxN)
-                    {
-                        ++_cutted;
-                        break;
-                    }
-                }
-                return node;
-            }
-        }
-
-        private static RatingResult Max(RatingResult first, RatingResult second)
-        {
-            if (first == null) return second;
-            if (second == null) return first;
-            var listTmp = new List<RatingResult> {first, second};
-
-            var betterCat = listTmp.Where(x => x.CCategory / 100 > x.PCategory / 100).ToList();
-            if (betterCat.Any())
-                return betterCat.OrderByDescending(x => x.CValue).ThenBy(x => x.PValue).First();
-
-            return
-                listTmp.OrderBy(x => x.PCategory / 100)
-                    .ThenBy(x => x.PValue)
-                    .ThenByDescending(x => x.CValue)
-                    .FirstOrDefault();
-        }
-
-        private static RatingResult Min(RatingResult first, RatingResult second)
-        {
-            if (first == null) return second;
-            if (second == null) return first;
-            return Max(first, second) == first ? second : first;
         }
     }
 }

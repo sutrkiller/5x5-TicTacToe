@@ -17,5 +17,9 @@ namespace TicTacToe.Models
         public int ComputerNeighbours { get; set; }
         public int PlayerNeighbours { get; set; }
         public IList<Node> Children { get; set; } = new List<Node>();
+
+        public RatingResult ValueN { get; set; }
+        public RatingResult MinN { get; set; }
+        public RatingResult MaxN { get; set; }
     }
 }
